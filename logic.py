@@ -7,25 +7,22 @@ print(ports)
 
 notenum = 36
 
-# ポート管理
-
-
 def main():
     print("Module_Logic has connected")
 
 
+# ポート管理
 def portscheck():
-    foundports = mido.get_output_names()
-    return(foundports)
+    gotports = mido.get_output_names()
+    return(gotports)
 
 
 def portschange(portnum):
     mido.open_output(ports[portnum])
     print(f"Succesfully opened port[{ports[portnum]}]")
 
+
 # 押されたときの処理関数
-
-
 def midiR(path, righthand=0):
     print(path, righthand)
     if righthand == 1:
@@ -43,7 +40,6 @@ def midiR(path, righthand=0):
     elif righthand == 7:
         outport.send(Message('note_on', note=notenum + 11))
     pass
-
 
 def midiL(path, lefthand=0):
     print(path, lefthand)
