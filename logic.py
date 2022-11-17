@@ -1,14 +1,11 @@
 import mido
 from mido import Message
 
+print("Module_Logic has connected")
 ports = mido.get_output_names()
+print(mido.get_output_names())
 outport = mido.open_output(ports[0])
-print(ports)
-
 notenum = 36
-
-def main():
-    print("Module_Logic has connected")
 
 
 # ポート管理
@@ -18,7 +15,9 @@ def portscheck():
 
 
 def portschange(portnum):
-    mido.open_output(ports[portnum])
+    global outport
+    outport.close()
+    outport = mido.open_output(ports[portnum])
     print(f"Succesfully opened port[{ports[portnum]}]")
 
 
