@@ -1,52 +1,31 @@
+import json
 import mido
 from mido import Message
 
+json_open = open("keylist.json", "r")
+json_load = json.load(json_open)
 print("Module_Logic has connected")
 ports = mido.get_output_names()
 print(mido.get_output_names())
 outport = mido.open_output(ports[0])
-notenum = 36
-
 
 # ポート管理
 def portscheck():
     gotports = mido.get_output_names()
     return(gotports)
 
-
+# ポート変更
 def portschange(portnum):
     global outport
     outport.close()
     outport = mido.open_output(ports[portnum])
     print(f"Succesfully opened port[{ports[portnum]}]")
 
-
 # 押されたときの処理関数
 def midiR(path, righthand=0):
-    print(path, righthand)
-    if righthand == 1:
-        outport.send(Message('note_on', note=notenum + 0))
-    elif righthand == 2:
-        outport.send(Message('note_on', note=notenum + 2))
-    elif righthand == 3:
-        outport.send(Message('note_on', note=notenum + 4))
-    elif righthand == 4:
-        outport.send(Message('note_on', note=notenum + 5))
-    elif righthand == 5:
-        outport.send(Message('note_on', note=notenum + 7))
-    elif righthand == 6:
-        outport.send(Message('note_on', note=notenum + 9))
-    elif righthand == 7:
-        outport.send(Message('note_on', note=notenum + 11))
-    pass
-
+    print(path, righthand, json_load["Righthand"][righthand])
+    outport.send(Message(json_load["Righthand"][righthand][0], 
+    note=json_load["Righthand"][righthand][1]))
+    
 def midiL(path, lefthand=0):
     print(path, lefthand)
-    global notenum
-    if lefthand == 0:
-        notenum = 36
-    elif lefthand == 1:
-        notenum = 48
-    elif lefthand == 2:
-        notenum = 60
-    pass

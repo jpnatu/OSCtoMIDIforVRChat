@@ -1,0 +1,24 @@
+{   
+    "Righthand":
+    [
+        [ "note_on" , 0  ],
+        [ "note_on" , 36 ],
+        [ "note_on" , 38 ],
+        [ "note_on" , 40 ],
+        [ "note_on" , 41 ],
+        [ "note_on" , 43 ],
+        [ "note_on" , 45 ],
+        [ "note_on" , 47 ]
+    ],
+    "Lefthand":
+    [
+        [ "note_on" , 0  ],
+        [ "note_on" , 36 ],
+        [ "note_on" , 38 ],
+        [ "note_on" , 40 ],
+        [ "note_on" , 41 ],
+        [ "note_on" , 43 ],
+        [ "note_on" , 45 ],
+        [ "note_on" , 47 ]
+    ]   
+}
