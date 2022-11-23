@@ -24,8 +24,9 @@ def portschange(portnum):
 # 押されたときの処理関数
 def midiR(path, righthand=0):
     print(path, righthand, json_load["Righthand"][righthand])
-    outport.send(Message(json_load["Righthand"][righthand][0], 
-    note=json_load["Righthand"][righthand][1]))
+    outport.send(Message(json_load["Righthand"][righthand][1],
+    channel=json_load["Righthand"][righthand][3],
+    note=json_load["Righthand"][righthand][2]))
     
 def midiL(path, lefthand=0):
     print(path, lefthand)
