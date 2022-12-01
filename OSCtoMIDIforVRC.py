@@ -59,7 +59,6 @@ class Application(tk.Frame):
     def widget_left(self):
         frame2 = tk.Frame(self, bg="green")
         frame2.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        
         label2 = tk.Label(frame2, text="Left hand settings")
         label2.pack(side=tk.TOP, padx=10,pady=10)      
 
@@ -115,10 +114,10 @@ class Application(tk.Frame):
             print(keylist["Righthand"][cb3_1.current()])
             with open("keylist.json", "w") as outfile:
                 json.dump(keylist, outfile, indent=4)
+            logic.json_reload()
 
         btn2 = tk.Button(labelframe1,text="Write and Reload",command=Writetojson)
         btn2.pack(side=tk.TOP)
-        logic.json_reload()
 
     # チャンネルのトリガー設定
     def widget_channel(self):
@@ -128,16 +127,27 @@ class Application(tk.Frame):
         label.pack(side=tk.TOP, padx=10,pady=10)
         labelframe = tk.LabelFrame(frame, labelanchor="nw", text="Settings")
         labelframe.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=10)
-        # ハンドサイン選択
+        # チャンネル選択
         label3_1 = tk.Label(labelframe, text="チャンネル番号")
         label3_1.pack(side=tk.TOP, anchor=tk.W, padx=5)
-        cb3_1 = ttk.Combobox(labelframe, state="readonly",value=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16])
-        cb3_1.pack(side=tk.TOP, fill=tk.X)
+        cb1 = ttk.Combobox(labelframe, state="readonly",value=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16])
+        cb1.pack(side=tk.TOP, fill=tk.X)
         # プログラムチェンジ
         label3_4 = tk.Label(labelframe, text="プログラムチェンジ")
         label3_4.pack(side=tk.TOP, anchor=tk.W, padx=5)
         entPC = tk.Entry(labelframe)
         entPC.pack(side=tk.TOP, fill=tk.X)
+
+        # JSON書き込み
+        def Writetojson():
+            keylist["Channel"][cb1.current()] = int(entPC.get())
+            print(keylist["Channel"])
+            with open("keylist.json", "w") as outfile:
+                json.dump(keylist, outfile, indent=4)
+            logic.channel_setting(int(cb1.current()))
+
+        btn2 = tk.Button(labelframe,text="Reload",command=Writetojson)
+        btn2.pack(side=tk.TOP)
 
     # 終了処理
     def delete_window(self):

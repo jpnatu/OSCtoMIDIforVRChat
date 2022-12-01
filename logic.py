@@ -3,18 +3,21 @@ import mido
 from mido import Message
 
 keylist = json.load(open("keylist.json", "r"))
-print("Module_Logic has connected")
 ports = mido.get_output_names()
-print(mido.get_output_names())
 outport = mido.open_output(ports[0])
+number = 0
+while number <=16:
+    outport.send(Message("program_change",
+    channel=number,
+    program=keylist["Channel"][number]))
+    
 
-def channel_setting():
-    for index in range(len(keylist["Channel"])):
-        outport.send(Message("program_change",program=keylist["Channel"][index]))
+def channel_setting(ch):
+    pg=keylist["Channel"][ch]
+    outport.send(Message("program_change",channel=ch,program=pg))
 
 def json_reload():
-    loadedjson = json.load(open("keylist.json", "r"))
-    print(loadedjson["Righthand"])
+    json.load(open("keylist.json", "r"))
 
 # ポート管理
 def portscheck():
@@ -36,4 +39,7 @@ def midiR(path, righthand=0):
     note   =keylist["Righthand"][righthand][3]))
     
 def midiL(path, lefthand=0):
-    print(path, lefthand)
+    print(path, lefthand, keylist["Lefthand"][lefthand])
+    outport.send(Message(keylist["Lefthand"][lefthand][1],
+    channel=keylist["Lefthand"][lefthand][2],
+    note   =keylist["Lefthand"][lefthand][3]))
