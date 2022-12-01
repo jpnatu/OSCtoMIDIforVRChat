@@ -25,24 +25,17 @@ class Application(tk.Frame):
         self.master.title('OSCtoMIDIforVRC')
         self.pack(fill=tk.BOTH, expand=True)
         self.master.protocol("WM_DELETE_WINDOW", self.delete_window)
-        self.create_widget()
+        self.widget_port()
+        self.widget_left()
+        self.widget_right()
+        self.widget_channel()
+        global keylist
+        keylist = json.load(open("keylist.json", "r"))
 
-    #======================================
-    #  ウィジェットの作成
-    #======================================
-    def create_widget(self):
-        
-        json_data = json.load(open("keylist.json", "r"))
-
-        handsign = ["default", "fist", "HandOpen","FingerPoint",
-                    "Victory", "RocknRoll","Handgun", "ThumbsUp"]
-        channelvalue=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
-        #-------------------------------------
-        # frame1(ポート選択)
-        #-------------------------------------
+    # ポート選択ウィジェット     
+    def widget_port(self):
         frame1 = tk.Frame(self, bg="red", background="#61a4e0")
         frame1.pack(side=tk.LEFT, fill=tk.BOTH)
-
         label1 = tk.Label(frame1, text="Avalable Ports")
         label1.pack(side=tk.TOP, padx=10, pady=10)
 
@@ -61,19 +54,20 @@ class Application(tk.Frame):
 
         listbox1.pack(side=tk.TOP, padx=10)
         listbox1.bind('<<ListboxSelect>>', lb1select)
-  
-        #-------------------------------------
-        # frame2(左手のトリガー)
-        #-------------------------------------
+
+    # 左手のトリガー設定
+    def widget_left(self):
         frame2 = tk.Frame(self, bg="green")
         frame2.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         
         label2 = tk.Label(frame2, text="Left hand settings")
-        label2.pack(side=tk.TOP, padx=10,pady=10)
+        label2.pack(side=tk.TOP, padx=10,pady=10)      
 
-        #-------------------------------------
-        # frame3(右手のトリガー)
-        #-------------------------------------     
+    # 右手のトリガー設定
+    def widget_right(self):
+        handsign = ["default", "fist", "HandOpen","FingerPoint",
+                    "Victory", "RocknRoll","Handgun", "ThumbsUp"]
+        channelvalue=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16    
         # フレーム
         frame3 = tk.Frame(self, bg="orange")
         frame3.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -84,14 +78,20 @@ class Application(tk.Frame):
                          expand=True, padx=10, pady=10)
 
         # ハンドサイン選択
-        label3_1 = tk.Label(labelframe1, text="Whitch handsign to assign")
+        label3_1 = tk.Label(labelframe1, text="割り当てるハンドサイン")
         label3_1.pack(side=tk.TOP, anchor=tk.W, padx=5)
         cb3_1 = ttk.Combobox(labelframe1, state="readonly",value=handsign)
         cb3_1.pack(side=tk.TOP, fill=tk.X)
 
+        # # メッセージタイプ選択
+        # label3_2 = tk.Label(labelframe1, text="Message Type")
+        # label3_2.pack(side=tk.TOP, anchor=tk.W, padx=5)
+        # cb3_3 = ttk.Comboboex(labelframe1, state="readonly")
+        # cb3_3.pack(side=tk.TOP, fill=tk.X)
+
         # 送信チャンネル選択
-        label3_2 = tk.Label(labelframe1, text="To send channel")
-        label3_2.pack(side=tk.TOP, anchor=tk.W, padx=5)
+        label3_3 = tk.Label(labelframe1, text="送るチャンネル")
+        label3_3.pack(side=tk.TOP, anchor=tk.W, padx=5)
         cb3_2 = ttk.Combobox(labelframe1, state="readonly",value=channelvalue)
         cb3_2.pack(side=tk.TOP, fill=tk.X)
 
@@ -102,40 +102,48 @@ class Application(tk.Frame):
         # cb3_3.pack(side=tk.TOP, fill=tk.X)
 
         # ノート選択
-        label3_4 = tk.Label(labelframe1, text="Note number")
+        label3_4 = tk.Label(labelframe1, text="ノート番号")
         label3_4.pack(side=tk.TOP, anchor=tk.W, padx=5)
-        ent1 = tk.Entry(labelframe1)
-        ent1.pack(side=tk.TOP, fill=tk.X)
-
-        # プログラムチェンジ
-        label3_5 = tk.Label(labelframe1, text="プログラムチェンジ")
-        label3_5.pack(side=tk.TOP, anchor=tk.W, padx=5)
-        entry_prgcng_R = tk.Entry(labelframe1)
-        entry_prgcng_R.pack(side=tk.TOP, fill=tk.X)
-
+        entNote_R = tk.Entry(labelframe1)
+        entNote_R.pack(side=tk.TOP, fill=tk.X)
+        
         # JSONかきこみ
         def Writetojson():
-            json_data = json.load(open("keylist.json", "r"))
-            json_data["Righthand"][cb3_1.current()] = \
-            cb3_1.get(),"note_on",cb3_2.current(), \
-            int(entry_prgcng_R.get()),int(ent1.get()),
+            keylist["Righthand"][cb3_1.current()] = \
+            cb3_1.get(),"note_on",cb3_2.current(),int(entNote_R.get()),
             
-            print(json_data["Righthand"][cb3_1.current()])
+            print(keylist["Righthand"][cb3_1.current()])
             with open("keylist.json", "w") as outfile:
-                json.dump(json_data, outfile, indent=4)
+                json.dump(keylist, outfile, indent=4)
 
-        btn2 = tk.Button(labelframe1,text="Write to JSON",command=Writetojson)
+        btn2 = tk.Button(labelframe1,text="Write and Reload",command=Writetojson)
         btn2.pack(side=tk.TOP)
-        btn3 = tk.Button(labelframe1,text="Reload JSON",command=logic.json_reload)
-        btn3.pack(side=tk.TOP)
+        logic.json_reload()
+
+    # チャンネルのトリガー設定
+    def widget_channel(self):
+        frame = tk.Frame(self, bg="gray")
+        frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        label = tk.Label(frame, text="Channel settings")
+        label.pack(side=tk.TOP, padx=10,pady=10)
+        labelframe = tk.LabelFrame(frame, labelanchor="nw", text="Settings")
+        labelframe.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=10)
+        # ハンドサイン選択
+        label3_1 = tk.Label(labelframe, text="チャンネル番号")
+        label3_1.pack(side=tk.TOP, anchor=tk.W, padx=5)
+        cb3_1 = ttk.Combobox(labelframe, state="readonly",value=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16])
+        cb3_1.pack(side=tk.TOP, fill=tk.X)
+        # プログラムチェンジ
+        label3_4 = tk.Label(labelframe, text="プログラムチェンジ")
+        label3_4.pack(side=tk.TOP, anchor=tk.W, padx=5)
+        entPC = tk.Entry(labelframe)
+        entPC.pack(side=tk.TOP, fill=tk.X)
 
     # 終了処理
     def delete_window(self):
         self.master.destroy()
 
-#======================================
 # VRCからのOSCを受け取るサーバー
-#======================================
 def osc_serve():
     ip, port, dispatcher= "127.0.0.1", 9001, Dispatcher()
     dispatcher.map("/avatar/parameters/GestureRight", logic.midiR)
