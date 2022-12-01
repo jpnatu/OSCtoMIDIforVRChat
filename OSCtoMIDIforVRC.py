@@ -1,17 +1,18 @@
-import tkinter as tk
-import tkinter.ttk as ttk
 import json
 import threading
+import tkinter as tk
+import tkinter.ttk as ttk
+
 from pythonosc import osc_server
 from pythonosc.dispatcher import Dispatcher
+
 import logic
 
+
 def main():
-    global oscserver
     oscserver = threading.Thread(target=osc_serve,daemon=True)
     oscserver.start()
     root = tk.Tk()
-    root.minsize(width=500, height=300)
     app = Application(master=root)
     app.mainloop()
 
@@ -19,10 +20,9 @@ def main():
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
-
         # ウィンドウの設定
+        self.master.minsize(width=500, height=300)
         self.master.title('OSCtoMIDIforVRC')
-        # メインフレームの配置
         self.pack(fill=tk.BOTH, expand=True)
         self.master.protocol("WM_DELETE_WINDOW", self.delete_window)
         self.create_widget()
@@ -108,16 +108,17 @@ class Application(tk.Frame):
         ent1.pack(side=tk.TOP, fill=tk.X)
 
         # プログラムチェンジ
-        # label3_5 = tk.Label(labelframe1, text="プログラムチェンジ")
-        # label3_5.pack(side=tk.TOP, anchor=tk.W, padx=5)
-        # cb3_5 = ttk.Combobox(labelframe1, state="readonly")
-        # cb3_5.pack(side=tk.TOP, fill=tk.X)
+        label3_5 = tk.Label(labelframe1, text="プログラムチェンジ")
+        label3_5.pack(side=tk.TOP, anchor=tk.W, padx=5)
+        entry_prgcng_R = tk.Entry(labelframe1)
+        entry_prgcng_R.pack(side=tk.TOP, fill=tk.X)
 
         # JSONかきこみ
         def Writetojson():
             json_data = json.load(open("keylist.json", "r"))
             json_data["Righthand"][cb3_1.current()] = \
-            cb3_1.get(),"note_on",int(ent1.get()),cb3_2.current()
+            cb3_1.get(),"note_on",cb3_2.current(), \
+            int(entry_prgcng_R.get()),int(ent1.get()),
             
             print(json_data["Righthand"][cb3_1.current()])
             with open("keylist.json", "w") as outfile:
@@ -125,12 +126,16 @@ class Application(tk.Frame):
 
         btn2 = tk.Button(labelframe1,text="Write to JSON",command=Writetojson)
         btn2.pack(side=tk.TOP)
+        btn3 = tk.Button(labelframe1,text="Reload JSON",command=logic.json_reload)
+        btn3.pack(side=tk.TOP)
 
     # 終了処理
     def delete_window(self):
         self.master.destroy()
 
+#======================================
 # VRCからのOSCを受け取るサーバー
+#======================================
 def osc_serve():
     ip, port, dispatcher= "127.0.0.1", 9001, Dispatcher()
     dispatcher.map("/avatar/parameters/GestureRight", logic.midiR)

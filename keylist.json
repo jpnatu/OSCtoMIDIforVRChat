@@ -1,24 +1,24 @@
 {   
     "Righthand":
     [
-        ["default"    , "note_on" , 0 , 0 ],
-        ["fist"       , "note_on" , 36, 0 ],
-        ["HandOpen"   , "note_on" , 38, 0 ],
-        ["FingerPoint", "note_on" , 40, 0 ],
-        ["Victory"    , "note_on" , 41, 0 ],
-        ["RocknRoll"  , "note_on" , 43, 0 ],
-        ["Handgun"    , "note_on" , 45, 0 ],
-        ["ThumbsUp"   , "note_on" , 47, 0 ]
+        ["default"    , "note_off", 0, 0, 0 ],
+        ["fist"       , "note_on" , 0, 0, 36],
+        ["HandOpen"   , "note_on" , 0, 0, 38],
+        ["FingerPoint", "note_on" , 0, 0, 40],
+        ["Victory"    , "note_on" , 0, 0, 41],
+        ["RocknRoll"  , "note_on" , 0, 0, 43],
+        ["Handgun"    , "note_on" , 0, 0, 45],
+        ["ThumbsUp"   , "note_on" , 0, 0, 47]
     ],
     "Lefthand":
     [
-        ["default"    , "note_on" , 0 , 0 ],
-        ["fist"       , "note_on" , 36, 0 ],
-        ["HandOpen"   , "note_on" , 38, 0 ],
-        ["FingerPoint", "note_on" , 40, 0 ],
-        ["Victory"    , "note_on" , 41, 0 ],
-        ["RocknRoll"  , "note_on" , 43, 0 ],
-        ["Handgun"    , "note_on" , 45, 0 ],
-        ["ThumbsUp"   , "note_on" , 47, 0 ]
+        ["default"    , "note_off", 0, 0, 0 ],
+        ["fist"       , "note_on" , 0, 0, 36],
+        ["HandOpen"   , "note_on" , 0, 0, 38],
+        ["FingerPoint", "note_on" , 0, 0, 40],
+        ["Victory"    , "note_on" , 0, 0, 41],
+        ["RocknRoll"  , "note_on" , 0, 0, 43],
+        ["Handgun"    , "note_on" , 0, 0, 45],
+        ["ThumbsUp"   , "note_on" , 0, 0, 47]
     ]   
 }
